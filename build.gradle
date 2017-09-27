@@ -1,0 +1,44 @@
+apply plugin: 'groovy'
+apply plugin: 'java-gradle-plugin'
+apply plugin: 'maven-publish'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.4.7'
+    compile 'org.eclipse.jgit:org.eclipse.jgit:4.1.1.201511131810-r'
+    testCompile 'junit:junit:4.12'
+}
+
+group = 'com.alliancels'
+version = '0.0.1'
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allGroovy
+    classifier "sources"
+}
+
+task groovydocJar(type: Jar, dependsOn: groovydoc) {
+    from groovydoc.destinationDir
+    classifier = 'groovydoc'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+            artifact sourceJar
+            artifact groovydocJar
+        }
+    }
+
+    repositories {
+        maven {
+            // This is intended to be published to a local clone of https://github.com/alliancels/maven-repo, which is
+            // expected to exist within the same parent folder as this project's local repo.
+            url "../maven-repo"
+        }
+    }
+}
