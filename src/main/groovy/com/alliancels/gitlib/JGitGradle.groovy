@@ -56,8 +56,23 @@ class JGitGradle {
      * @return The repository.
      */
     static Repository getProjectRepo(Project project) {
+
+        File currentDirectory = project.rootProject.rootDir
+        File repoFolder = null
+
+        while (repoFolder == null) {
+
+            def checkGitFolder = new File(currentDirectory, '/.git')
+
+            if (checkGitFolder.exists()) {
+                repoFolder = checkGitFolder
+            } else {
+                currentDirectory = currentDirectory.parentFile
+            }
+        }
+
         def repo = new RepositoryBuilder()
-                .setGitDir(new File(project.rootProject.rootDir, '/.git'))
+                .setGitDir(repoFolder)
                 .readEnvironment()
                 .build()
 
