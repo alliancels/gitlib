@@ -12,7 +12,7 @@ repositories {
     }
 }
 dependencies {
-    classpath 'com.alliancels:gitlib:0.0.1'
+    classpath 'com.alliancels:gitlib:0.0.2'
 }
 ```
 
